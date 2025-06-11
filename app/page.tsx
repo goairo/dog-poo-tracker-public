@@ -6,7 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { Dog, Heart, BookOpen, Camera, Plus } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Dog, Heart, BookOpen, Camera, Plus, Trash2 } from "lucide-react"
 
 type PooType = {
   id: string
@@ -45,6 +56,14 @@ export default function DogPooTracker() {
     }
     setEntries([newEntry, ...entries])
     setCurrentScreen("dashboard")
+  }
+
+  const deleteEntry = (id: string) => {
+    setEntries(entries.filter(entry => entry.id !== id))
+  }
+
+  const clearAllEntries = () => {
+    setEntries([])
   }
 
   const calculateHealthScore = () => {
@@ -139,12 +158,38 @@ export default function DogPooTracker() {
                           <p className="text-sm text-gray-600">{entry.type.description}</p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <Badge variant="outline">{entry.type.healthScore}%</Badge>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {entry.timestamp.toLocaleDateString()}{" "}
-                          {entry.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </p>
+                      <div className="flex items-center space-x-3">
+                        <div className="text-right">
+                          <Badge variant="outline">{entry.type.healthScore}%</Badge>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {entry.timestamp.toLocaleDateString()}{" "}
+                            {entry.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                        </div>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Entry</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete this entry? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => deleteEntry(entry.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                   </CardContent>
@@ -152,6 +197,36 @@ export default function DogPooTracker() {
               ))
             )}
           </div>
+
+          {entries.length > 0 && (
+            <div className="mb-6 flex justify-center">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Clear All Entries
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Clear All Entries</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete all entries? This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={clearAllEntries}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      Clear All
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
 
           <div className="flex justify-center space-x-4">
             <Button variant="outline" onClick={() => setCurrentScreen("dashboard")}>
