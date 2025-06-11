@@ -136,14 +136,14 @@ export default function DogPooTracker() {
         <div className="max-w-md mx-auto">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-center mb-2">Health Logbook</h1>
-            <p className="text-gray-600 text-center">Track {dogName}'s digestive health over time</p>
+            <p className="text-gray-600 text-center">Track {dogName}&apos;s digestive health over time</p>
           </div>
 
           <div className="space-y-4 mb-6">
             {entries.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-center">
-                  <p className="text-gray-500">No entries yet. Start tracking to see your dog's health history!</p>
+                  <p className="text-gray-500">No entries yet. Start tracking to see your dog&apos;s health history!</p>
                 </CardContent>
               </Card>
             ) : (
